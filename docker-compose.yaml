@@ -12,29 +12,18 @@ services:
     container_name: proxy
     image: traefik
     volumes:
-      - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-      - ./traefik:/config
     ports:
       - "80:80"
       - "443:443"
     command:
-#      - "--log.level=DEBUG"
-      - "--providers.file.directory=/config"
-      - "--providers.file.watch=true"
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge=true"
-      - "--certificatesresolvers.myhttpchallenge.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myhttpchallenge.acme.email=diego.ciangottini@gmail.com"
-      - "--certificatesresolvers.myhttpchallenge.acme.storage=/letsencrypt/acme.json"
-      # Use this when testing, comment it when you are ready for a real certificate
-      #- "--certificatesresolvers.myhttpchallenge.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
     networks:
       - net
   grav:
@@ -47,11 +36,10 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.middlewares.grav-redirect-ssl.redirectscheme.scheme=https"
-      - "traefik.http.routers.grav-nossl.middlewares=grav-redirect-ssl"
-      - "traefik.http.routers.grav-nossl.rule=Host(`${DNS_NAME}`)"
+      - "traefik.http.routers.grav-nossl.middlewares=minio-redirect-ssl"
+      - "traefik.http.routers.grav-nossl.rule=Host(`${DNS_NAME}`, `{subdomain:[0-9]+.[0-9]+.[0-9]+}.myip.cloud.infn.it`)"
       - "traefik.http.routers.grav-nossl.entrypoints=web"
-      - "traefik.http.routers.grav.rule=Host(`${DNS_NAME}`)"
+      - "traefik.http.routers.grav.rule=HostRegexp(`${DNS_NAME}`, `{subdomain:[0-9]+.[0-9]+.[0-9]+}.myip.cloud.infn.it`)"
       - "traefik.http.routers.grav.entrypoints=websecure"
-      - "traefik.http.routers.grav.tls.certresolver=myhttpchallenge"
       - "traefik.http.routers.grav.tls=true"
       - "traefik.http.services.grav.loadbalancer.server.port=80"
