@@ -64,7 +64,7 @@ ARG GRAV_VERSION=latest
 # Install grav
 WORKDIR /var/www
 RUN git clone https://github.com/bozzochet/herd-grav.git && \
-    mv -T /var/www/grav /var/www/html && \
+    mv -T /var/www/herd-grav /var/www/html && \
     cd html && \
     ./install.sh
 
