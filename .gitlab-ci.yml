@@ -1,6 +1,8 @@
 build:
   tags:
     - shell
+  only:
+    - master
   script:
     - docker build --no-cache --build-arg DEPLOY_TOKEN -t git.recas.ba.infn.it:4567/herd/web/herd-grav-docker .
     - docker login git.recas.ba.infn.it:4567 -u gitlab-ci-token -p $CI_JOB_TOKEN
