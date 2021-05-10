@@ -39,7 +39,7 @@ services:
       - net
   grav:
     container_name: grav
-    image: bozzochet/docker-herd-grav:latest
+    image: git.recas.ba.infn.it:4567/herd/docker-grav
     expose:
       - 80
     networks:
