@@ -13,11 +13,6 @@ RUN a2enmod rewrite expires && \
 #RUN sed -i 's|SSLProtocol all -SSLv3|SSLProtocol all -SSLv3 -TLSv1 -TLSv1.1\n\tSSLCompression off\n\tSSLSessionTickets off|' /etc/apache2/mods-available/ssl.conf
 #RUN a2enmod ssl
 
-# OpenIDC conf
-#RUN sed -i 's|</VirtualHost>|  SSLEngine on\n  SSLCertificateFile "/certs/hostcert.pem"\n  SSLCertificateKeyFile "/certs/hostcert.key"\n  SSLCipherSuite HIGH:!aNULL:!MD5\n\n  OIDCProviderMetadataURL https://herd.cloud.cnaf.infn.it/.well-known/openid-configuration\n  OIDCClientID b3584579-25de-410e-8c4f-8ca3d2dca119\n  OIDCClientSecret AN6v1koAhq9i1IKZE2nfcmI34SGFtOB98BRZx4EnqRUB6hpokf_dbd-qVEcGRvGoH5s20J39_oUEid8qARyhbZk\n\n  # OIDCRedirectURI is a vanity URL that must point to a path protected by this module but must NOT point to any content\n  OIDCRedirectURI https://herd.cloud.infn.it/wiki/redirect_uri\n  OIDCCryptoPassphrase r8inQlow\n\n\n  <Location /var/www/html/wiki/>\n     AuthType openid-connect\n     Require claim groups:herd\n  </Location>\n\n</VirtualHost>|' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's|</VirtualHost>|\n\n  OIDCProviderMetadataURL https://herd.cloud.cnaf.infn.it/.well-known/openid-configuration\n  OIDCClientID b3584579-25de-410e-8c4f-8ca3d2dca119\n  OIDCClientSecret AN6v1koAhq9i1IKZE2nfcmI34SGFtOB98BRZx4EnqRUB6hpokf_dbd-qVEcGRvGoH5s20J39_oUEid8qARyhbZk\n\n  # OIDCRedirectURI is a vanity URL that must point to a path protected by this module but must NOT point to any content\n  OIDCRedirectURI https://herd.cloud.infn.it/wiki/redirect_uri\n  OIDCCryptoPassphrase r8inQlow\n\n\n  <Location /var/www/html/wiki/>\n     AuthType openid-connect\n     Require claim groups:herd\n  </Location>\n\n</VirtualHost>|' /etc/apache2/sites-available/000-default.conf 
-
-# Install dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     libfreetype6-dev \
@@ -108,6 +103,10 @@ USER root
 
 # provide container inside image for data persistence
 VOLUME ["/var/www/html"]
+
+# (MD) add conf for OpenIDC
+ADD openidc.conf /etc/apache2/conf-available
+RUN a2enconf openidc
 
 # ENTRYPOINT ["/entrypoint.sh"]
 # CMD ["apache2-foreground"]
