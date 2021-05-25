@@ -76,14 +76,8 @@ ARG GRAV_VERSION=latest
 
 # Install grav
 WORKDIR /var/www
-<<<<<<< HEAD
 RUN git clone https://github.com/bozzochet/herd-grav.git && \
-    mv -T /var/www/herd-grav /var/www/html && \
-=======
-ARG DEPLOY_TOKEN
-RUN git clone https://imagebuilder:$DEPLOY_TOKEN@git.recas.ba.infn.it/herd/web/herd-grav.git && \
     mv -Tf /var/www/herd-grav /var/www/html && \
->>>>>>> 33c1a13 (bugfix)
     cd html && \
     ./install.sh
 
