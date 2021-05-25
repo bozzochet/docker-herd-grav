@@ -31,7 +31,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     cron \
     vim \
-    wget \
     && docker-php-ext-install opcache \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl \
@@ -41,7 +40,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # install mod_auth_openidc packages
-RUN wget https://github.com/zmartzone/mod_auth_openidc/releases/download/v2.4.0/libcjose0_0.6.1.5-1.buster+1_amd64.deb \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    wget \
+    libhiredis0.14 \
+    && wget https://github.com/zmartzone/mod_auth_openidc/releases/download/v2.4.0/libcjose0_0.6.1.5-1.buster+1_amd64.deb \
     && dpkg -i libcjose0_0.6.1.5-1.buster+1_amd64.deb \
     && rm -fv libcjose0_0.6.1.5-1.buster+1_amd64.deb \
     && wget https://github.com/zmartzone/mod_auth_openidc/releases/download/v2.4.8.2/libapache2-mod-auth-openidc_2.4.8.2-1.buster+1_amd64.deb \
