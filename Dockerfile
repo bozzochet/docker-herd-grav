@@ -45,8 +45,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libhiredis0.14 \
     && wget https://github.com/zmartzone/mod_auth_openidc/releases/download/v2.4.0/libcjose0_0.6.1.5-1.buster+1_amd64.deb \
     && dpkg -i libcjose0_0.6.1.5-1.buster+1_amd64.deb \
+    && rm -fv libcjose0_0.6.1.5-1.buster+1_amd64.deb \
     && wget https://github.com/zmartzone/mod_auth_openidc/releases/download/v2.4.8.2/libapache2-mod-auth-openidc_2.4.8.2-1.buster+1_amd64.deb \
     && dpkg -i libapache2-mod-auth-openidc_2.4.8.2-1.buster+1_amd64.deb \
+    && rm -fv libapache2-mod-auth-openidc_2.4.8.2-1.buster+1_amd64.deb \
     && rm -rf /var/lib/apt/lists/*
 
 # set recommended PHP.ini settings
@@ -78,7 +80,7 @@ ARG GRAV_VERSION=latest
 WORKDIR /var/www
 ARG DEPLOY_TOKEN
 RUN git clone https://imagebuilder:$DEPLOY_TOKEN@git.recas.ba.infn.it/herd/web/herd-grav.git && \
-    mv -T /var/www/herd-grav /var/www/html && \
+    mv -Tf /var/www/herd-grav /var/www/html && \
     cd html && \
     ./install.sh
 
