@@ -55,3 +55,21 @@ services:
       - "traefik.http.routers.grav.tls.certresolver=myhttpchallenge"
       - "traefik.http.routers.grav.tls=true"
       - "traefik.http.services.grav.loadbalancer.server.port=80"
+  nextcloud:
+    container_name: nextcloud
+    image: nextcloud
+    expose:
+      - 80
+    networks:
+      - net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.nextcloud-redirect-ssl.redirectscheme.scheme=https"
+      - "traefik.http.routers.nextcloud-nossl.middlewares=nextcloud-redirect-ssl"
+      - "traefik.http.routers.nextcloud-nossl.rule=Host(`${DNS_NAME}/calendar`)"
+      - "traefik.http.routers.nextcloud-nossl.entrypoints=web"
+      - "traefik.http.routers.nextcloud.rule=Host(`${DNS_NAME}/calendar`)"
+      - "traefik.http.routers.nextcloud.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud.tls.certresolver=myhttpchallenge"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
