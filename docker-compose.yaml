@@ -48,13 +48,15 @@ services:
       - "traefik.enable=true"
       - "traefik.http.middlewares.grav-redirect-ssl.redirectscheme.scheme=https"
       - "traefik.http.routers.grav-nossl.middlewares=grav-redirect-ssl"
-      - "traefik.http.routers.grav-nossl.rule=Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)"
+      - "traefik.http.routers.grav-nossl.rule=Host(`www.${DNS_NAME}`)"
       - "traefik.http.routers.grav-nossl.entrypoints=web"
-      - "traefik.http.routers.grav.rule=Host(`${DNS_NAME}`) || Host(`www.${DNS_NAME}`)"
+      - "traefik.http.routers.grav.rule=Host(`www.${DNS_NAME}`)"
       - "traefik.http.routers.grav.entrypoints=websecure"
       - "traefik.http.routers.grav.tls.certresolver=myhttpchallenge"
       - "traefik.http.routers.grav.tls=true"
       - "traefik.http.services.grav.loadbalancer.server.port=80"
+      - "traefik.http.middlewares.grav-redirect.redirectregex.regex=^https://`${DNS_NAME}`/(.*)"
+      - "traefik.http.middlewares.grav-redirect.redirectregex.replacement=https://`www.${DNS_NAME}`/$${1}"
   nextcloud:
     container_name: nextcloud
     image: nextcloud
