@@ -88,7 +88,7 @@ RUN (crontab -l; echo "* * * * * cd /var/www/html;/usr/local/bin/php bin/grav sc
 # and at 02:45, to remove [if one package is kept in both places is however removed for safety, for example the Admin one])
 RUN (crontab -l; echo "15 2 * * * cd /var/www/html;./install_plugins.sh 1>> /dev/null 2>&1") | crontab -
 RUN (crontab -l; echo "45 2 * * * cd /var/www/html;./remove_plugins.sh 1>> /dev/null 2>&1") | crontab -
-RUN (crobtab -l; echo "15 3 * * * cd /var/www/html/herd;./clone_wiki_and_link.sh 1>> /dev/null 2>&1") | crontab -
+RUN (crontab -l; echo "15 3 * * * cd /var/www/html;./clone_wiki_and_link.sh 1>> /dev/null 2>&1") | crontab -
 
 # Create cron job to update Grav github repo (i.e. web site content) every hour.
 # In case the list of plugins is changed (install_plugins.sh and remove_plugins.sh)
